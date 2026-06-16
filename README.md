@@ -1,31 +1,26 @@
-# Linux Preview - Interactive Photo Editor & Markup Simulator
+# photo-editor-llinux
 
-A premium, web-based image markup editor designed to mimic the native Linux **Preview** app. Built using vanilla HTML5, CSS3, and JavaScript, it features a glassmorphic user interface layered on a simulated Linux desktop environment with interactive window controls, menus, shortcut sheets, and a bottom Dock.
+An elegant, standalone Linux desktop photo editor and image annotation utility built with Electron, HTML5, CSS3, and JavaScript. Featuring a premium glassmorphic user interface, it provides comprehensive markup tools and pixel editing operations inside a desktop window.
+
+---
 
 ## Features
 
-- **Linux Window Controls:**
-  - Double-click the title bar to maximize or restore the window.
-  - Drag the title bar to move the window.
-  - Traffic light buttons to close (hide), minimize (to Dock), and zoom (maximize).
-- **Core Editor Markup Tools:**
-  - **Selection Tool (`S`):** Click, select, drag to move, and resize vector shapes using 8 bounding-box handles.
-  - **Rectangle Tool (`R`):** Click and drag to draw rectangular frames with optional solid or translucent fill colors.
-  - **Circle Tool (`C`):** Draw circular/elliptical zones.
-  - **Arrow Tool (`A`):** Draw pointer arrows pointing towards the mouse release point.
-  - **Line Tool (`L`):** Draw linear dividers/strokes.
-  - **Pen Tool (`P`):** Freehand sketch drawings.
-  - **Text Tool (`T`):** Click to insert inline text, write in-place inside an overlay editor. Double-click text in selection mode to edit content.
-- **Styling Customizations:**
-  - **Border/Line Color:** Select from Linux System Palette colors or specify custom colors.
-  - **Fill Color:** Solid, semi-transparent (opacity slider), or transparent fill color.
-  - **Stroke Thickness:** Slider scale adjustment (1px to 30px).
-  - **Font controls:** Customize size (12pt to 96pt) and family (Outfit sans-serif, Georgia, Courier monospace, Playfair display).
-- **Quality & Vector Scale Support:**
-  - **Crisp High-Res Render Loop:** Canvas display coordinates adapt to the zoom factor, while the vector math uses **raw image coordinate spaces**.
-  - **Lossless PNG Export:** When saving/exporting, annotations are merged at the original resolution of the uploaded image.
-  - **Drag & Drop:** Upload local images by dragging and dropping them anywhere inside the workspace window.
-  - **Blank canvas generation:** Start drawing on a clean 1000x700 pixel white canvas if no image is available.
+### 🌟 New Interactive Enhancements
+* **Dotted Marquee Selection:** A dedicated rectangular selection tool. Selecting the pointer/select tool initializes a default marquee box styled with an active dotted boundary. You can resize it via 8 handles, drag to move it, or drag across any empty space on the canvas to draw a brand-new selection.
+* **Crop to Selection (`Ctrl + K`):** Crop the current canvas instantly to the active selection box bounds. Triggers translation and clipping of all existing vector shapes to align them perfectly to the cropped image coordinate system.
+* **90° Image Rotation:** Rotate the canvas and loaded image 90° clockwise at the click of a button. Automatically transforms and rotates all underlying annotations and marquee selections synchronously.
+* **Complete Undo/Redo Support:** Both vector actions and raster mutations (such as cropping and rotating) are serialized in the history stack, making every action fully undoable/redoable.
+
+### 🎨 Core Annotations & Customizations
+* **Move & Select (`S`):** Select, translate, and resize individual vector shapes.
+* **Vector Markup Tools:**
+  * **Rectangle (`R`) & Circle (`O`):** Draw shapes with outline colors and translucent or solid fills.
+  * **Arrow (`A`) & Line (`L`):** Draw pointing lines or simple straight line breaks.
+  * **Pencil (`P`):** Sketch freehand lines.
+  * **Text (`T`):** Input inline text with font size and family adjustments. Double-click to edit existing text.
+* **Styling Bar:** Customize stroke thickness, border color, and fill opacity.
+* **Export:** Offscreen 1:1 scale rendering to export the annotated image as a lossless PNG.
 
 ---
 
@@ -35,48 +30,64 @@ A premium, web-based image markup editor designed to mimic the native Linux **Pr
 | --- | --- |
 | `Ctrl` + `O` | Open Image File |
 | `Ctrl` + `S` | Export Image as PNG (Lossless) |
-| `Ctrl` + `Z` | Undo last change |
-| `Ctrl` + `Y` | Redo last change |
+| `Ctrl` + `K` | Crop Canvas to Selection |
+| `Ctrl` + `Z` | Undo last action |
+| `Ctrl` + `Y` | Redo last action |
 | `Backspace` / `Delete` | Delete selected vector shape |
 | `S` | Selection Tool |
 | `R` | Rectangle Tool |
-| `C` | Circle Tool |
+| `C` | Crop Tool |
+| `O` | Circle Tool |
 | `A` | Arrow Tool |
 | `L` | Line Tool |
 | `P` | Pen Tool |
-| `T` | Text Tool |
+| `T` | Text Box |
 | `Space` + Drag Mouse | Pan canvas workspace |
 | `Arrow Keys` | Nudge selected shape (Hold `Shift` for 10px) |
 
 ---
 
-## Getting Started
+## How to Run the Application
 
-Since the editor is built using vanilla web standard code, it doesn't require any compilers or complex setup.
+`photo-editor-llinux` is packaged as an Electron desktop application. Ensure you have [Node.js](https://nodejs.org/) installed before running.
 
-### Option 1: Serve locally (Recommended)
-To run the editor, you can start a simple server inside this folder and open `http://localhost:8088` in your browser.
-
+### 1. Install Dependencies
+Navigate to the project directory and install the required Electron binaries:
 ```bash
-# Start a simple HTTP server (Python 3)
-python3 -m http.server 8088
+npm install
 ```
 
-### Option 2: Open directly
-Alternatively, you can open `index.html` directly in any web browser:
-`file:///path/to/photo-editor/index.html`
+### 2. Launch the Desktop App
+You can run the application directly using the launcher script:
+```bash
+bash start-app.sh
+```
+
+Alternatively, launch it via npm:
+```bash
+npm start
+```
+
+### 3. Build & Package (Optional)
+To package the app into a native Linux executable/installer, run:
+```bash
+npm run package
+```
 
 ---
 
 ## Project Structure
 
-```
+```text
 photo-editor/
-├── index.html        # App layout, menus, Dock and dialogs
-├── style.css         # Linux Sonoma glassmorphic stylesheet
-├── app.js            # Vector drawing & window state engine
-├── README.md         # Documentation
+├── index.html        # Glassmorphic user interface structure
+├── style.css         # Desktop and canvas styling sheet
+├── app.js            # Main application state, render loop & canvas math
+├── main.js           # Electron main process configuration
+├── preload.js        # IPC communication preload script
+├── start-app.sh      # Shell script shortcut to launch the app
+├── package.json      # Dependencies and execution commands
 └── assets/
-    ├── app_icon.png  # Premium photo-editor app icon
-    └── wallpaper.png # Linux Sonoma default colorful wallpaper
+    ├── app_icon.png  # Desktop launcher app icon
+    └── wallpaper.png # Workspace viewport fallback background
 ```
