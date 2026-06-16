@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupToolbar();
     setupCanvasEvents();
     setupKeyboardShortcuts();
+    checkStartupFile();
 });
 
 function initDOMElements() {
@@ -2108,6 +2109,38 @@ function loadBlankCanvas(width, height) {
 
 function loadSampleImage() {
     loadImage('assets/wallpaper.png');
+}
+
+async function checkStartupFile() {
+    if (window.electronAPI) {
+        // Fetch initial file path from process args
+        const startupFilePath = await window.electronAPI.getFileToOpen();
+        if (startupFilePath) {
+            loadLocalImageFile(startupFilePath);
+        }
+        
+        // Register listener for opening files from other instances
+        window.electronAPI.onOpenFile((filePath) => {
+            loadLocalImageFile(filePath);
+        });
+    }
+}
+
+async function loadLocalImageFile(filePath) {
+    if (!window.electronAPI) return;
+    document.getElementById('footer-status').textContent = 'Loading local image...';
+    const result = await window.electronAPI.readImageFile(filePath);
+    if (result && result.success) {
+        // Hide empty state if showing
+        const emptyState = document.getElementById('empty-state-view');
+        if (emptyState) emptyState.style.display = 'none';
+        
+        loadImage(result.dataUrl);
+        // Overwrite window title with the opened filename
+        document.getElementById('window-title-text').textContent = result.filename;
+    } else {
+        showToast('Error reading local file: ' + (result ? result.reason : 'unknown'), true);
+    }
 }
 
 // ==========================================================================

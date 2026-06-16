@@ -47,29 +47,41 @@ An elegant, standalone Linux desktop photo editor and image annotation utility b
 
 ---
 
-## How to Run the Application
+## Installation & Desktop Integration
 
-`photo-editor-llinux` is packaged as an Electron desktop application. Ensure you have [Node.js](https://nodejs.org/) installed before running.
+You can install `photo-editor-llinux` as your default system image viewer and editor (similar to Shotwell or GNOME Image Viewer). This registers the application with your desktop environment and links it as the default utility to open images from your file manager.
 
 ### 1. Install Dependencies
-Navigate to the project directory and install the required Electron binaries:
+Navigate to the project directory and install the dependencies:
 ```bash
 npm install
 ```
 
-### 2. Launch the Desktop App
-You can run the application directly using the launcher script:
+### 2. Run the Desktop Integration Script
+To register desktop links and set file type associations, run:
 ```bash
-bash start-app.sh
+./install.sh
+```
+This script configures a desktop launcher at `~/.local/share/applications/photo-editor-llinux.desktop` and sets it as the default viewer for common image formats (PNG, JPEG, WebP, GIF, SVG, BMP, TIFF).
+
+### 3. Launching
+After running the installation script, you can:
+* Launch `photo-editor-llinux` from your desktop application menu.
+* Double-click any image file in your file manager to open and edit it.
+* Run standard terminal commands to view files directly, e.g.:
+  ```bash
+  photo-editor-llinux path/to/image.jpg
+  ```
+
+Alternatively, to run the application in development without installing desktop shortcuts:
+```bash
+bash start-app.sh [path/to/image.jpg]
+# or
+npm start -- [path/to/image.jpg]
 ```
 
-Alternatively, launch it via npm:
-```bash
-npm start
-```
-
-### 3. Build & Package (Optional)
-To package the app into a native Linux executable/installer, run:
+### 4. Build & Package (Optional)
+To package the app into a native, standalone Linux executable/installer:
 ```bash
 npm run package
 ```
