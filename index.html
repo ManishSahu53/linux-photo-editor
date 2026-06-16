@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>photo-editor-llinux</title>
+    <!-- Google Fonts: Outfit for sleek modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Main Application Wrapper -->
+    <main class="desktop">
+        <!-- Photo Editor Window -->
+        <div class="window active" id="editor-window">
+            <!-- Window Title Bar / Header -->
+            <div class="window-header" id="window-titlebar">
+                <!-- Integrated App Menus -->
+                <div class="header-menu-triggers">
+                    <span class="logo-text"> Preview</span>
+                    <button class="menu-item dropdown-trigger" data-dropdown="file-menu">File</button>
+                    <button class="menu-item dropdown-trigger" data-dropdown="edit-menu">Edit</button>
+                    <button class="menu-item dropdown-trigger" data-dropdown="help-menu">Help</button>
+                </div>
+
+                <div class="window-title" id="window-title-text">photo-editor-llinux</div>
+
+                <div class="window-actions">
+                    <!-- Zoom & Pan Controls -->
+                    <div class="zoom-controls">
+                        <button class="action-btn" id="btn-zoom-out" title="Zoom Out">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                            </svg>
+                        </button>
+                        <span class="zoom-level" id="zoom-text">100%</span>
+                        <button class="action-btn" id="btn-zoom-in" title="Zoom In">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                                <line x1="11" y1="8" x2="11" y2="14"></line>
+                            </svg>
+                        </button>
+                        <button class="action-btn" id="btn-zoom-reset" title="Fit to Screen">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round">
+                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Markup Toolbar Toggle -->
+                    <button class="action-btn markup-toggle-btn active" id="btn-toggle-markup"
+                        title="Toggle Markup Toolbar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Markup Tools Bar -->
+            <div class="markup-bar" id="markup-toolbar">
+                <!-- Select tool -->
+                <button class="tool-btn active" data-tool="select" title="Selection Tool (S)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 3l11 11-4.5.5L20 20l-3 1.5-4.5-5.5L8 19V3z" />
+                    </svg>
+                </button>
+
+                <div class="divider"></div>
+
+                <!-- Drawing Shapes -->
+                <button class="tool-btn" data-tool="rect" title="Rectangle (R)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="circle" title="Circle (C)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="arrow" title="Arrow (A)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="19" x2="19" y2="5" />
+                        <polyline points="12 5 19 5 19 12" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="line" title="Line (L)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="5" y1="19" x2="19" y2="5" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="pen" title="Pen/Freehand (P)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 20H7L3 16C2 15 2 13 3 12L13 2L22 11L20 20Z" />
+                        <path d="M17 17L12 12" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="crop" title="Crop (C)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2v14a2 2 0 0 0 2 2h14" />
+                        <path d="M18 22V8a2 2 0 0 0-2-2H2" />
+                    </svg>
+                </button>
+                <button class="tool-btn" id="btn-rotate-90" title="Rotate 90° Right">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="text" title="Text Box (T)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 7 4 4 20 4 20 7" />
+                        <line x1="9" y1="20" x2="15" y2="20" />
+                        <line x1="12" y1="4" x2="12" y2="20" />
+                    </svg>
+                </button>
+
+                <div class="divider"></div>
+
+                <!-- Custom Styles controls -->
+                <!-- Stroke/Border Color -->
+                <div class="style-group" title="Border / Line Color">
+                    <button class="style-trigger-btn" id="stroke-color-trigger">
+                        <span class="color-preview" id="stroke-color-preview"></span>
+                    </button>
+                    <!-- Color Picker Dropdown -->
+                    <div class="style-dropdown color-picker-dropdown" id="stroke-color-menu">
+                        <div class="color-presets">
+                            <span class="color-preset" style="background: #FF3B30;" data-color="#FF3B30"
+                                title="Linux Red"></span>
+                            <span class="color-preset" style="background: #FF9500;" data-color="#FF9500"
+                                title="Linux Orange"></span>
+                            <span class="color-preset" style="background: #FFCC00;" data-color="#FFCC00"
+                                title="Linux Yellow"></span>
+                            <span class="color-preset" style="background: #34C759;" data-color="#34C759"
+                                title="Linux Green"></span>
+                            <span class="color-preset" style="background: #007AFF;" data-color="#007AFF"
+                                title="Linux Blue"></span>
+                            <span class="color-preset" style="background: #AF52DE;" data-color="#AF52DE"
+                                title="Linux Purple"></span>
+                            <span class="color-preset" style="background: #FFFFFF; border: 1px solid #ddd;"
+                                data-color="#FFFFFF" title="White"></span>
+                            <span class="color-preset" style="background: #8E8E93;" data-color="#8E8E93"
+                                title="Gray"></span>
+                            <span class="color-preset" style="background: #000000;" data-color="#000000"
+                                title="Black"></span>
+                        </div>
+                        <div class="custom-color-input">
+                            <label>Custom:</label>
+                            <input type="color" id="stroke-color-input" value="#FF3B30">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fill Color -->
+                <div class="style-group" title="Fill Color">
+                    <button class="style-trigger-btn" id="fill-color-trigger">
+                        <span class="color-preview fill" id="fill-color-preview"></span>
+                    </button>
+                    <!-- Color Picker Dropdown -->
+                    <div class="style-dropdown color-picker-dropdown" id="fill-color-menu">
+                        <div class="color-presets">
+                            <span class="color-preset transparent" data-color="transparent" title="No Fill">✕</span>
+                            <span class="color-preset" style="background: rgba(255, 59, 48, 0.3);"
+                                data-color="rgba(255, 59, 48, 0.3)" title="Linux Red (30%)"></span>
+                            <span class="color-preset" style="background: rgba(255, 149, 0, 0.3);"
+                                data-color="rgba(255, 149, 0, 0.3)" title="Linux Orange (30%)"></span>
+                            <span class="color-preset" style="background: rgba(255, 204, 0, 0.3);"
+                                data-color="rgba(255, 204, 0, 0.3)" title="Linux Yellow (30%)"></span>
+                            <span class="color-preset" style="background: rgba(52, 199, 89, 0.3);"
+                                data-color="rgba(52, 199, 89, 0.3)" title="Linux Green (30%)"></span>
+                            <span class="color-preset" style="background: rgba(0, 122, 255, 0.3);"
+                                data-color="rgba(0, 122, 255, 0.3)" title="Linux Blue (30%)"></span>
+                            <span class="color-preset" style="background: rgba(175, 82, 222, 0.3);"
+                                data-color="rgba(175, 82, 222, 0.3)" title="Linux Purple (30%)"></span>
+                            <span class="color-preset"
+                                style="background: rgba(255, 255, 255, 0.5); border: 1px solid #ddd;"
+                                data-color="rgba(255, 255, 255, 0.5)" title="White (50%)"></span>
+                            <span class="color-preset" style="background: rgba(0, 0, 0, 0.5);"
+                                data-color="rgba(0, 0, 0, 0.5)" title="Black (50%)"></span>
+                        </div>
+                        <div class="custom-color-input">
+                            <label>Custom:</label>
+                            <input type="color" id="fill-color-input" value="#ffffff">
+                            <input type="range" id="fill-opacity-input" min="0" max="1" step="0.1" value="0.3"
+                                title="Opacity">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stroke Thickness -->
+                <div class="style-group" title="Line Thickness">
+                    <button class="style-trigger-btn" id="thickness-trigger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="4" y1="6" x2="20" y2="6" stroke-width="1" />
+                            <line x1="4" y1="12" x2="20" y2="12" stroke-width="3" />
+                            <line x1="4" y1="18" x2="20" y2="18" stroke-width="6" />
+                        </svg>
+                    </button>
+                    <!-- Thickness Dropdown -->
+                    <div class="style-dropdown" id="thickness-menu">
+                        <div class="dropdown-option" data-thickness="1">Thin (1px)</div>
+                        <div class="dropdown-option selected" data-thickness="3">Medium (3px)</div>
+                        <div class="dropdown-option" data-thickness="6">Thick (6px)</div>
+                        <div class="dropdown-option" data-thickness="12">Extra Thick (12px)</div>
+                        <hr>
+                        <div class="slider-option">
+                            <label>Custom:</label>
+                            <input type="range" id="thickness-slider" min="1" max="30" value="3">
+                            <span id="thickness-val">3px</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Font Formatting (only shows/active for text) -->
+                <div class="style-group" id="font-style-group" title="Font Settings">
+                    <button class="style-trigger-btn" id="font-trigger">
+                        <span style="font-weight: bold; font-family: Georgia, serif;">A<i>a</i></span>
+                    </button>
+                    <div class="style-dropdown" id="font-menu">
+                        <div class="font-select-row">
+                            <label>Size:</label>
+                            <select id="font-size-select">
+                                <option value="12">12 pt</option>
+                                <option value="16">16 pt</option>
+                                <option value="20">20 pt</option>
+                                <option value="24" selected>24 pt</option>
+                                <option value="32">32 pt</option>
+                                <option value="48">48 pt</option>
+                                <option value="64">64 pt</option>
+                                <option value="96">96 pt</option>
+                            </select>
+                        </div>
+                        <div class="font-select-row">
+                            <label>Font:</label>
+                            <select id="font-family-select">
+                                <option value="Outfit, sans-serif" selected>Outfit (Modern)</option>
+                                <option value="Georgia, serif">Georgia (Serif)</option>
+                                <option value="'Courier New', monospace">Courier (Mono)</option>
+                                <option value="'Playfair Display', serif">Playfair (Display)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Undo / Redo / Delete inside markup toolbar -->
+                <button class="action-btn-sm" id="btn-undo" title="Undo (⌘Z)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7v6h6" />
+                        <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                    </svg>
+                </button>
+                <button class="action-btn-sm" id="btn-redo" title="Redo (⌘Y)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 7v6h-6" />
+                        <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7" />
+                    </svg>
+                </button>
+                <button class="action-btn-sm danger" id="btn-delete" title="Delete Selected Shape (⌫)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Editor Work Area -->
+            <div class="editor-workspace" id="workspace">
+                <!-- Floating Crop Actions Bar -->
+                <div id="crop-actions-bar" class="crop-actions-bar hidden">
+                    <span class="crop-bar-title">Cropping Mode</span>
+                    <div class="crop-bar-buttons">
+                        <button id="btn-crop-cancel" class="crop-btn cancel">Cancel</button>
+                        <button id="btn-crop-apply" class="crop-btn apply">Apply Crop</button>
+                    </div>
+                </div>
+
+                <!-- Dropdown instruction overlay -->
+                <div class="drop-zone" id="drop-overlay">
+                    <div class="drop-message">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                        <h3>Drag & Drop Photo Here</h3>
+                        <p>Or use the top toolbar to import images</p>
+                    </div>
+                </div>
+
+                <!-- Canvas and editing layers -->
+                <div class="canvas-container" id="canvas-container">
+                    <canvas id="photo-canvas"></canvas>
+                    <!-- Overlay element for inline text editing -->
+                    <textarea id="text-editor-input" class="inline-text-textarea" style="display: none;"></textarea>
+                </div>
+
+                <!-- Empty state starting view -->
+                <div class="empty-state" id="empty-state-view">
+                    <div class="logo-area">
+                        <img src="assets/app_icon.png" alt="Photo Editor Icon" class="app-hero-icon">
+                        <h1>Linux Photo Editor</h1>
+                        <p>Markup and edit your photos instantly.</p>
+                    </div>
+                    <div class="action-options">
+                        <button class="primary-btn" id="empty-btn-open">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" style="margin-right: 8px;">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2 2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                            </svg>
+                            Open Image...
+                        </button>
+                        <button class="secondary-btn" id="empty-btn-sample">
+                            Load Demo Image
+                        </button>
+                        <button class="secondary-btn" id="empty-btn-blank">
+                            Create Blank Canvas
+                        </button>
+                    </div>
+                    <div class="drop-hint">or drag and drop an image anywhere on this window</div>
+                </div>
+            </div>
+
+            <!-- Footer / Info bar -->
+            <div class="window-footer">
+                <div class="footer-left" id="footer-dimensions">- x - pixels</div>
+                <div class="footer-center" id="footer-status">Ready</div>
+                <div class="footer-right" id="footer-tool">Select Tool</div>
+            </div>
+        </div>
+
+        <!-- Help Info Popup Window -->
+        <div class="info-popup modal" id="help-popup" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Linux Preview Help</h2>
+                    <button class="modal-close"
+                        onclick="document.getElementById('help-popup').style.display='none'">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p>Welcome to this simulated Linux Photo Editor. You can perform standard vector markup operations
+                        on any image:</p>
+                    <ul>
+                        <li><strong>Open Image:</strong> Click "File" -> "Open" or drag and drop an image into the
+                            editor.</li>
+                        <li><strong>Select / Move / Resize:</strong> In Selection tool mode, click on any shape to
+                            select it. Drag it to move, or drag its handles to resize.</li>
+                        <li><strong>Add Text:</strong> Select the Text tool, click on the canvas, type inside the box,
+                            and click outside to save. Double click text to edit.</li>
+                        <li><strong>Delete:</strong> Select a shape and press <strong>Backspace</strong> or
+                            <strong>Delete</strong> key.
+                        </li>
+                        <li><strong>Zoom & Pan:</strong> Zoom using mouse wheel or toolbar buttons. Hold
+                            <strong>Spacebar</strong> and drag to pan when zoomed in.
+                        </li>
+                        <li><strong>Save:</strong> Click File -> Export to download your image with all annotations
+                            merged in full resolution!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard Shortcuts Popup Window -->
+        <div class="info-popup modal" id="shortcuts-popup" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Keyboard Shortcuts</h2>
+                    <button class="modal-close"
+                        onclick="document.getElementById('shortcuts-popup').style.display='none'">✕</button>
+                </div>
+                <div class="modal-body">
+                    <table class="shortcuts-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Shortcut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Open File</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>O</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Save / Export</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Undo</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Redo</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>Y</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Delete Selected</td>
+                                <td><kbd>Backspace</kbd> / <kbd>Delete</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Crop to Selection</td>
+                                <td><kbd>Ctrl</kbd> + <kbd>K</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Select Tool</td>
+                                <td><kbd>S</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Rectangle Tool</td>
+                                <td><kbd>R</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Circle Tool</td>
+                                <td><kbd>C</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Arrow Tool</td>
+                                <td><kbd>A</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Line Tool</td>
+                                <td><kbd>L</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Pen Tool</td>
+                                <td><kbd>P</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Text Tool</td>
+                                <td><kbd>T</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Nudge Shape</td>
+                                <td>Arrow Keys (Hold <kbd>Shift</kbd> for 10px)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="toast" id="toast-notification">Image saved successfully!</div>
+    </main>
+
+    <!-- File Menu Dropdown -->
+    <div class="menu-dropdown" id="file-menu">
+        <div class="dropdown-item" id="menu-open-trigger">Open... <span class="shortcut">⌘O</span></div>
+        <div class="dropdown-item" id="menu-sample-trigger">Load Demo Photo</div>
+        <div class="dropdown-item" id="menu-blank-trigger">New Blank Canvas</div>
+        <hr>
+        <div class="dropdown-item disabled" id="menu-save-trigger">Save <span class="shortcut">⌘S</span></div>
+        <div class="dropdown-item" id="menu-export-trigger">Export as PNG...</div>
+    </div>
+
+    <!-- Edit Menu Dropdown -->
+    <div class="menu-dropdown" id="edit-menu">
+        <div class="dropdown-item" id="menu-undo-trigger">Undo <span class="shortcut">⌘Z</span></div>
+        <div class="dropdown-item" id="menu-redo-trigger">Redo <span class="shortcut">⌘Y</span></div>
+        <hr>
+        <div class="dropdown-item" id="menu-delete-trigger">Delete Selected <span class="shortcut">⌫</span></div>
+        <div class="dropdown-item" id="menu-clear-trigger">Clear All</div>
+    </div>
+
+    <!-- Tools Menu Dropdown -->
+    <div class="menu-dropdown" id="tools-menu">
+        <div class="dropdown-item tool-select-item" data-tool="select">Selection Tool</div>
+        <div class="dropdown-item tool-select-item" data-tool="rect">Draw Rectangle</div>
+        <div class="dropdown-item tool-select-item" data-tool="circle">Draw Circle</div>
+        <div class="dropdown-item tool-select-item" data-tool="arrow">Draw Arrow</div>
+        <div class="dropdown-item tool-select-item" data-tool="line">Draw Line</div>
+        <div class="dropdown-item tool-select-item" data-tool="pen">Draw Pen</div>
+        <div class="dropdown-item tool-select-item" data-tool="eraser">Eraser Tool</div>
+        <div class="dropdown-item tool-select-item" data-tool="crop">Crop Image</div>
+        <div class="dropdown-item tool-select-item" data-tool="text">Draw Text</div>
+    </div>
+
+    <!-- Help Dropdown -->
+    <div class="menu-dropdown" id="help-menu">
+        <div class="dropdown-item" id="menu-help-trigger">Preview Help</div>
+        <div class="dropdown-item" id="menu-shortcuts-trigger">Keyboard Shortcuts</div>
+    </div>
+
+    <!-- Hidden Input elements -->
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+    <script src="app.js"></script>
+</body>
+
+</html>

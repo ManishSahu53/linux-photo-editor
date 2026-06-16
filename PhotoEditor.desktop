@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=photo-editor-llinux
+Comment=Minimalist Linux-style Photo Editor
+Exec=/home/abtesting/Downloads/tiler/photo-editor/start-app.sh
+Icon=/home/abtesting/Downloads/tiler/photo-editor/assets/app_icon.png
+Terminal=false
+Type=Application
+Categories=Graphics;
+StartupNotify=true

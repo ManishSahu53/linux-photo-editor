@@ -1,0 +1,999 @@
+/* ==========================================================================
+   Linux Photo Editor - Design Stylesheet
+   ========================================================================== */
+
+/* Font & Variables */
+:root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252525;
+    --bg-menu: rgba(20, 20, 20, 0.35);
+    --bg-window: rgba(28, 28, 30, 0.82);
+    --bg-toolbar: rgba(40, 40, 40, 0.6);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-active: rgba(255, 255, 255, 0.2);
+    --accent-color: #0A84FF;
+    /* Linux System Blue */
+    --accent-active: #0066CC;
+    --danger-color: #FF453A;
+    /* Linux System Red */
+    --warning-color: #FF9F0A;
+    /* Linux System Orange */
+    --success-color: #30D158;
+    /* Linux System Green */
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --text-muted: rgba(255, 255, 255, 0.35);
+    --font-stack: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --dock-bg: rgba(255, 255, 255, 0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    font-family: var(--font-stack);
+    background-color: #000;
+    color: var(--text-primary);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ==========================================================================
+   Application Integrated Menus
+   ========================================================================== */
+.header-menu-triggers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.logo-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-right: 12px;
+}
+
+/* Dropdown Menus */
+.menu-dropdown {
+    display: none;
+    position: fixed;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+    padding: 4px;
+    z-index: 10000;
+    animation: menuFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menu-dropdown.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: default;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-color);
+}
+
+.dropdown-item.disabled {
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.dropdown-item .shortcut {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.dropdown-item:hover .shortcut {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu-dropdown hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+/* ==========================================================================
+   Desktop Backdrop & Window Container
+   ========================================================================== */
+.desktop {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-primary);
+    position: relative;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+/* ==========================================================================
+   Linux Window Frame (Standalone App Style)
+   ========================================================================== */
+.window {
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.window-header .menu-item {
+    font-family: var(--font-stack);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: default;
+    padding: 4px 10px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.window-header .menu-item:hover,
+.window-header .menu-item.active {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+/* Traffic Lights */
+.window-header {
+    height: 44px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    cursor: default;
+    position: relative;
+}
+
+.traffic-lights {
+    display: flex;
+    gap: 8px;
+}
+
+.light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    position: relative;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.light.red {
+    background-color: var(--danger-color);
+}
+
+.light.yellow {
+    background-color: var(--warning-color);
+}
+
+.light.green {
+    background-color: var(--success-color);
+}
+
+.light::before {
+    content: '';
+    font-size: 8px;
+    color: rgba(0, 0, 0, 0.55);
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.traffic-lights:hover .light::before {
+    opacity: 1;
+}
+
+.light.red::before {
+    content: '×';
+}
+
+.light.yellow::before {
+    content: '−';
+}
+
+.light.green::before {
+    content: '+';
+    font-size: 7px;
+}
+
+/* Window Title & Actions */
+.window-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.window-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.action-btn:active {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 4px;
+}
+
+.zoom-controls .action-btn {
+    padding: 2px 4px;
+}
+
+.zoom-level {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    min-width: 36px;
+    text-align: center;
+}
+
+.markup-toggle-btn.active {
+    color: var(--accent-color);
+    background-color: rgba(10, 132, 255, 0.15);
+    border: 1px solid rgba(10, 132, 255, 0.25);
+}
+
+/* ==========================================================================
+   Markup Toolbar (Collapsible)
+   ========================================================================== */
+.markup-bar {
+    height: 42px;
+    background: var(--bg-toolbar);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Hide scrollbar for Firefox */
+    transition: height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+}
+
+.markup-bar.hidden {
+    height: 0;
+    opacity: 0;
+    padding: 0;
+    border-bottom-width: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.markup-bar::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar for Chrome/Safari */
+}
+
+.tool-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.tool-btn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.tool-btn.active {
+    background-color: var(--accent-color);
+    color: white !important;
+}
+
+.divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 4px;
+}
+
+.action-btn-sm {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: background-color 0.1s ease;
+}
+
+.action-btn-sm:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+}
+
+.action-btn-sm:active {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.action-btn-sm.danger:hover {
+    background-color: rgba(255, 69, 58, 0.2);
+    color: var(--danger-color);
+}
+
+.action-btn-sm.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* Style trigger groups */
+.style-group {
+    position: relative;
+}
+
+.style-trigger-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    height: 28px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    cursor: default;
+}
+
+.style-trigger-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.color-preview {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.color-preview.fill {
+    border-radius: 3px;
+}
+
+/* Color Picker & Thickness Dropdowns */
+.style-dropdown {
+    display: none;
+    position: fixed;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    z-index: 10000;
+    min-width: 160px;
+    animation: menuFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.style-dropdown.show {
+    display: block;
+}
+
+/* Color Palette Layout */
+.color-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.color-preset {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.1s ease;
+}
+
+.color-preset:hover {
+    transform: scale(1.12);
+}
+
+.color-preset.transparent {
+    background: #252525;
+    color: var(--danger-color);
+    border-radius: 4px;
+}
+
+.custom-color-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+.custom-color-input input[type="color"] {
+    border: none;
+    background: transparent;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.custom-color-input input[type="range"] {
+    width: 50px;
+}
+
+/* Thickness Option list */
+.dropdown-option {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: default;
+    color: var(--text-secondary);
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.dropdown-option:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.dropdown-option.selected {
+    color: var(--text-primary);
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.slider-option {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 4px 2px 4px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.slider-option input {
+    width: 100%;
+}
+
+.font-select-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.font-select-row:last-child {
+    margin-bottom: 0;
+}
+
+.font-select-row select {
+    background: #2b2b2b;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: white;
+    font-family: var(--font-stack);
+    padding: 2px 4px;
+    font-size: 11px;
+    width: 90px;
+}
+
+/* ==========================================================================
+   Workspace & Canvas Editor Area
+   ========================================================================== */
+.editor-workspace {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Premium Vector Checkered Background Grid */
+    background-image: linear-gradient(45deg, #181818 25%, transparent 25%),
+        linear-gradient(-45deg, #181818 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #181818 75%),
+        linear-gradient(-45deg, transparent 75%, #181818 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    background-color: #111111;
+}
+
+.canvas-container {
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    border-radius: 2px;
+    background: transparent;
+    transition: transform 0.1s ease;
+    transform-origin: center center;
+}
+
+#photo-canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Hidden elements */
+.drop-zone {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px dashed rgba(10, 132, 255, 0.4);
+    border-radius: 8px;
+    background: rgba(10, 132, 255, 0.08);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.drop-zone.active {
+    display: flex;
+}
+
+.drop-message {
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.drop-message svg {
+    margin-bottom: 12px;
+    color: var(--accent-color);
+}
+
+.drop-message h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.drop-message p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Empty State View */
+.empty-state {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 10;
+    padding: 40px;
+}
+
+.app-hero-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+.empty-state h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.action-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 220px;
+    margin-bottom: 24px;
+}
+
+.primary-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: background-color 0.15s ease;
+}
+
+.primary-btn:hover {
+    background-color: var(--accent-active);
+}
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: default;
+    transition: background-color 0.15s ease;
+}
+
+.secondary-btn:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.drop-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Inline Textarea Editor overlaying canvas */
+.inline-text-textarea {
+    position: absolute;
+    background: transparent;
+    border: 1px dashed var(--accent-color);
+    color: white;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+    line-height: 1.2;
+}
+
+/* ==========================================================================
+   Footer Status Bar
+   ========================================================================== */
+.window-footer {
+    height: 24px;
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Modals & Popups
+   ========================================================================== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: modalOverlayFade 0.2s ease;
+}
+
+@keyframes modalOverlayFade {
+    from {
+        background: rgba(0, 0, 0, 0);
+    }
+
+    to {
+        background: rgba(0, 0, 0, 0.4);
+    }
+}
+
+.modal-content {
+    background: rgba(36, 36, 36, 0.88);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    width: 480px;
+    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: default;
+    padding: 4px;
+}
+
+.modal-close:hover {
+    color: white;
+}
+
+.modal-body {
+    padding: 20px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-body p {
+    margin-bottom: 12px;
+}
+
+.modal-body ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.modal-body li {
+    margin-bottom: 6px;
+}
+
+/* Keyboard Shortcuts Table */
+.shortcuts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.shortcuts-table th,
+.shortcuts-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shortcuts-table th {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.shortcuts-table kbd {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 11px;
+    color: white;
+}
+
+/* Toast Notification */
+.toast {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0;
+    z-index: 10000;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Floating Crop Actions Bar */
+.crop-actions-bar {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    pointer-events: auto;
+    animation: slideDownIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.crop-actions-bar.hidden {
+    display: none !important;
+}
+
+@keyframes slideDownIn {
+    from {
+        transform: translate(-50%, -20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+.crop-bar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+}
+
+.crop-bar-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.crop-btn {
+    border: none;
+    border-radius: 15px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: default;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.crop-btn.cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.crop-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.crop-btn.apply {
+    background: var(--accent-color);
+    color: white;
+}
+
+.crop-btn.apply:hover {
+    background: #0062cc;
+}
+
+.crop-btn:active {
+    transform: scale(0.96);
+}

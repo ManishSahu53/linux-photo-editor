@@ -1,0 +1,22 @@
+{
+  "name": "photo-editor-llinux",
+  "version": "1.0.0",
+  "description": "Minimalist Linux-style Photo Editor",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "package": "electron-builder"
+  },
+  "keywords": [
+    "photo",
+    "editor",
+    "markup",
+    "crop",
+    "linux"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}
