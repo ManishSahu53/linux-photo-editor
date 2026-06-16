@@ -400,14 +400,6 @@ function setTool(tool) {
     if (tool === 'select') {
         workspace.style.cursor = 'default';
         document.getElementById('footer-tool').textContent = 'Select Tool';
-        if (image && !selectionBox) {
-            selectionBox = {
-                x: image.width * 0.1,
-                y: image.height * 0.1,
-                w: image.width * 0.8,
-                h: image.height * 0.8
-            };
-        }
     } else if (tool === 'eraser') {
         workspace.style.cursor = 'cell';
         document.getElementById('footer-tool').textContent = 'Eraser Tool';
@@ -1922,12 +1914,7 @@ function cropToSelection() {
             return true;
         });
 
-        selectionBox = {
-            x: w * 0.1,
-            y: h * 0.1,
-            w: w * 0.8,
-            h: h * 0.8
-        };
+        selectionBox = null;
 
         document.getElementById('footer-dimensions').textContent = `${w} x ${h} pixels`;
         resetZoomAndPan();
@@ -2038,12 +2025,7 @@ function loadImage(src) {
         undoStack = [];
         redoStack = [];
         selectedId = null;
-        selectionBox = {
-            x: img.width * 0.1,
-            y: img.height * 0.1,
-            w: img.width * 0.8,
-            h: img.height * 0.8
-        };
+        selectionBox = null;
 
         resetZoomAndPan();
 
@@ -2089,12 +2071,7 @@ function loadBlankCanvas(width, height) {
     undoStack = [];
     redoStack = [];
     selectedId = null;
-    selectionBox = {
-        x: width * 0.1,
-        y: height * 0.1,
-        w: width * 0.8,
-        h: height * 0.8
-    };
+    selectionBox = null;
 
     resetZoomAndPan();
 
