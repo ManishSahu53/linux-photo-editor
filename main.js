@@ -6,12 +6,19 @@ let filePathArg = null;
 
 // Handle command line arguments to open files
 function parseArgs(args, workingDirectory) {
-    const cleanArgs = args.filter(arg => !arg.startsWith('--') && arg !== '.' && !path.basename(arg).includes('electron'));
-    const fileToOpen = cleanArgs.length > 1 ? cleanArgs[cleanArgs.length - 1] : null;
-    if (fileToOpen) {
-        const absolutePath = path.isAbsolute(fileToOpen) ? fileToOpen : path.resolve(workingDirectory || process.cwd(), fileToOpen);
-        if (fs.existsSync(absolutePath) && fs.statSync(absolutePath).isFile()) {
-            return absolutePath;
+    for (let i = args.length - 1; i >= 0; i--) {
+        const arg = args[i];
+        if (arg.startsWith('--')) continue;
+        if (arg === '.') continue;
+        if (path.basename(arg).includes('electron')) continue;
+        
+        const absolutePath = path.isAbsolute(arg) ? arg : path.resolve(workingDirectory || process.cwd(), arg);
+        try {
+            if (fs.existsSync(absolutePath) && fs.statSync(absolutePath).isFile()) {
+                return absolutePath;
+            }
+        } catch (e) {
+            // Ignore stat errors
         }
     }
     return null;
